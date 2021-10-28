@@ -87,6 +87,7 @@ int main(int argc, char* argv[]){
     }
     else if (mode==1){
         cout<<"Entering matrix mult loops...\n";
+        
         for (uint32_t l=0; l<k; l++){
             for (uint32_t i=0; i<m; i++){
                 for (uint32_t j=0; j<n; j++){
