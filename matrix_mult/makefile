@@ -1,2 +1,2 @@
 main: main.o
-	g++ -o matrix_mult main.cpp -I.
+	g++ -static -o matrix_mult main.cpp -lm
