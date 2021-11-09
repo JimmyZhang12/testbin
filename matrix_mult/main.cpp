@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
         m, vector<uint32_t>(n,0));
 
     if (version==0){
-        cout<<"Entering matrix mult loops...\n";
+        cout<<"Entering matrix mult loops, baseline...\n";
 
         #pragma unroll
         for (uint32_t i=0; i<m; i++){
@@ -81,11 +81,11 @@ int main(int argc, char* argv[]){
         }
     }
     else if (version==1){
-        cout<<"Entering matrix mult loops...\n";
+        cout<<"Entering matrix mult loops, cache optimized...\n";
         #pragma unroll
-        for (uint32_t l=0; l<k; l++){
+        for (uint32_t i=0; i<m; i++){
             #pragma unroll
-            for (uint32_t i=0; i<m; i++){
+            for (uint32_t l=0; l<k; l++){
                 #pragma unroll
                 for (uint32_t j=0; j<n; j++){
                     c[i][j] += a[i][l]*b[l][j];
@@ -94,33 +94,8 @@ int main(int argc, char* argv[]){
         }      
     } 
     else if (version==2){
-        cout<<"Entering matrix mult loops...\n";
-        #pragma unroll
-        for (uint32_t i=0; i<m; i++){
-            #pragma unroll
-            for (uint32_t l=0; l<k; l++){
-                #pragma unroll
-                for (uint32_t j=0; j<n; j++){
-                    c[i][j] += a[i][l]*b[l][j];
-                }
-            }
-        }      
-    }  
-    else if (version==5){
-        cout<<"Entering matrix mult loops...\n";
-        #pragma unroll
-        for (uint32_t i=0; i<m; i++){
-            #pragma unroll
-            for (uint32_t l=0; l<k; l++){
-                #pragma unroll
-                for (uint32_t j=0; j<n; j++){
-                    c[i][j] += a[i][l]*b[l][j];
-                }
-            }
-        }      
-    } 
-    else if (version==3){
-        #define BLOCK 10
+        #define BLOCK 100
+        cout<<"Entering matrix mult loops, blocks...\n";
 
         #pragma unroll
         for (uint32_t i0=0; i0<m; i0=i0+BLOCK){
@@ -139,6 +114,7 @@ int main(int argc, char* argv[]){
         }}}}}}  
     }
     else{
+        cout<<"Invalid option\n";
 
     }
 

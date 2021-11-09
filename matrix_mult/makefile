@@ -1,7 +1,16 @@
 CXX = g++
-CXXFLAGS = -static -g -faggressive-loop-optimizations
+CXXFLAGS = -static
 
+all: main
 
+short: short.cpp
+	$(CXX) -O3 -g -c short.cpp
+
+fast: CXXFLAGS += -O3 -faggressive-loop-optimizations
+fast: main.fast
+
+main.fast: matrix_mult.o
+	$(CXX) $(CXXFLAGS) matrix_mult.o -o matrix_mult.fast -lm
 
 main: matrix_mult.o
 	$(CXX) $(CXXFLAGS) matrix_mult.o -o matrix_mult -lm
