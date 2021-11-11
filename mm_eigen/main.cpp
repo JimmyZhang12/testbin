@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <stdlib.h> 
 #include <unistd.h>
-#include <vector>
 #include <Eigen/Dense>
 
 using namespace std;
@@ -10,7 +9,7 @@ using namespace Eigen;
 
 #define m 10000
 #define n 10000
-#define k 10000
+#define k 1000
 
 class LCG{
     private:
@@ -37,15 +36,15 @@ int main(int argc, char* argv[]){
     }
     cout <<"Init matrix A done!\n";
     Matrix<uint32_t, Dynamic, Dynamic> b(k,n);
-    for (uint32_t i=0; i<n; i++){
-        for (uint32_t j=0; j<k; j++)
+    for (uint32_t i=0; i<k; i++){
+        for (uint32_t j=0; j<n; j++)
             b(i,j) = lcg.generate();     
     }
     cout <<"Init matrix B done!\n";
 
     Matrix<uint32_t, Dynamic, Dynamic> c(m,n);
     cout <<"Performing matrix multiplication..\n";
-    c = a*b;
+    c = b*a;
     cout <<"Done!\n";
    
 }

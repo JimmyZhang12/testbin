@@ -8,7 +8,7 @@ using namespace std;
 
 #define m 10000
 #define n 10000
-#define k 10000
+#define k 1000
 
 class LCG{
     private:
@@ -57,9 +57,9 @@ int main(int argc, char* argv[]){
     cout <<"Init matrix A done!\n";
 
     vector<vector<uint32_t>> b(
-        n, vector<uint32_t>(k,0));
-    for (uint32_t i=0; i<n; i++){
-        for (uint32_t j=0; j<k; j++)
+        k, vector<uint32_t>(n,0));
+    for (uint32_t i=0; i<k; i++){
+        for (uint32_t j=0; j<n; j++)
             b[i][j] = lcg.generate();
         
     }
@@ -119,7 +119,6 @@ int main(int argc, char* argv[]){
     }
     else{
         cout<<"Invalid option\n";
-
     }
 
     cout<<"Done!\n";
