@@ -6,25 +6,19 @@
 
 using namespace std;
 
-#define MOD 7919
-#define m 1000
-#define n 1000
-#define k 1000
+#define m 10000
+#define n 10000
+#define k 10000
 
 class LCG{
     private:
         uint32_t curr = 0;
         uint32_t prev = 0;
-        uint32_t a,mod,c;
+ 
     public:
-        LCG(uint32_t a, uint32_t b, uint32_t mod){
-            this->a = a;
-            this->c = c;
-            this->mod = mod;
-        }
         uint32_t generate(){
             prev = curr;
-            curr = (a*prev + c) % m;
+            curr = (55*prev + 95) % 7919;
             return curr;
         }
 };
@@ -32,6 +26,11 @@ class LCG{
 
 int main(int argc, char* argv[]){
     int version=0;
+
+    #ifdef FAST
+    version = 1;
+    #endif
+
     bool print = false;
 
     int option;
@@ -47,8 +46,7 @@ int main(int argc, char* argv[]){
    }
 
     cout<<"mode="<<version<<", m="<<m<<", n="<<n<<", k="<<k<<'\n';
-    
-    LCG lcg = LCG(55, 91, MOD);
+    LCG lcg = LCG();
     vector<vector<uint32_t>> a(
         m, vector<uint32_t>(k,0));
     for (uint32_t i=0; i<m; i++){
@@ -56,6 +54,8 @@ int main(int argc, char* argv[]){
             a[i][j] = lcg.generate();
         
     }
+    cout <<"Init matrix A done!\n";
+
     vector<vector<uint32_t>> b(
         n, vector<uint32_t>(k,0));
     for (uint32_t i=0; i<n; i++){
@@ -63,8 +63,12 @@ int main(int argc, char* argv[]){
             b[i][j] = lcg.generate();
         
     }
+    cout <<"Init matrix B done!\n";
+
     vector<vector<uint32_t>> c(
         m, vector<uint32_t>(n,0));
+        
+    cout <<"Init matrix C done!\n";
 
     if (version==0){
         cout<<"Entering matrix mult loops, baseline...\n";

@@ -6,7 +6,7 @@ all: main
 short: short.cpp
 	$(CXX) -O3 -g -c short.cpp
 
-fast: CXXFLAGS += -O3 -faggressive-loop-optimizations
+fast: CXXFLAGS += -O3 -faggressive-loop-optimizations -DFAST
 fast: main.fast
 
 main.fast: matrix_mult.o
