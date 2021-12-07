@@ -1,73 +1,93 @@
 #include <iostream>
-#include <utility>
-#include <algorithm>
 #include <vector>
+#include <fstream>
+#include <unordered_map>
+#include <string>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include "boost/graph/graph_traits.hpp"
-#include "boost/graph/adjacency_list.hpp"
+#include <boost/graph/graph_traits.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/depth_first_search.hpp>
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string.hpp>                         
 
 using namespace boost;
+using namespace std;
+
+typedef adjacency_list<> UndirectedGraph;
+typedef std::pair<int, int> Edge;
+typedef boost::graph_traits<UndirectedGraph>::vertex_descriptor MyVertex;
+
+
+class MyVisitor : public boost::default_dfs_visitor
+{
+public:
+  void discover_vertex(MyVertex v, const UndirectedGraph& g) const
+  {
+    cout << v << "\n";
+    return;
+  }
+};
+
 
 int main(int argc, char *argv[])
 {
-    //create an -undirected- graph type, using vectors as the underlying containers
-    //and an adjacency_list as the basic representation
-    typedef adjacency_list<vecS, vecS, undirectedS> UndirectedGraph;
+    string fdir = "../data/roadNet-CA.txt";
+    int mode = 0;
 
-    //Our set of edges, which basically are just converted into ints (0-4)
-    enum {A, B, C, D, E, N};
-    const char *name = "ABCDE";
+    int option;
+    while((option = getopt(argc, argv, "f:m:")) != -1){ //get option from the getopt() method
+        switch(option){
+            case  'f':
+                fdir = optarg;
+                break;
+            case 'm':
+                mode = atoi(optarg);
+      }
+   }
+    std::cout << "Building graph from: " << fdir << '\n';
 
-    //An edge is just a connection between two vertitices. Our verticies above
-    //are an enum, and are just used as integers, so our edges just become
-    //a std::pair<int, int>
-    typedef std::pair<int, int> Edge;
+    ifstream graph_txt;
+    graph_txt.open(fdir);
+    assert(graph_txt.is_open());
 
-    //Example uses an array, but we can easily use another container type
-    //to hold our edges. 
-    std::vector<Edge> edgeVec;
-    edgeVec.push_back(Edge(A,B));
-    edgeVec.push_back(Edge(A,D));
-    edgeVec.push_back(Edge(C,A));
-    edgeVec.push_back(Edge(D,C));
-    edgeVec.push_back(Edge(C,E));
-    edgeVec.push_back(Edge(B,D));
-    edgeVec.push_back(Edge(D,E));
+    UndirectedGraph g;
+    std::unordered_map<string, int> node_name2id;
 
-    //Now we can initialize our graph using iterators from our above vector
-    UndirectedGraph g(edgeVec.begin(), edgeVec.end(), N);
+    while(!graph_txt.eof()){
+        string line;
+        getline(graph_txt,line);
+        vector<string> strVec;              
+        boost::algorithm::split(strVec,line,is_any_of("\t "),boost::token_compress_on); 
+        if (mode == 0){ //ca road network format
+            int src = stoi(strVec[0]);
+            int dst = stoi(strVec[1]);
+            add_edge(src,dst,g);
+        }
+        else if (mode == 1){ //u of rochester format
+            if (line.at(0) == 'r'){
+                int src = node_name2id[strVec[2]];
+                int dst = node_name2id[strVec[3]];
+                add_edge(src,dst,g);
+            }
+            else if (line.at(0) == 'i'){
+                int id = add_vertex(g);
+                node_name2id[strVec[1]] = id;
+            }
+        }
 
-    std::cout << num_edges(g) << "\n";
-
-    //Ok, we want to see that all our edges are now contained in the graph
-    typedef graph_traits<UndirectedGraph>::edge_iterator edge_iterator;
-
-    //Tried to make this section more clear, instead of using tie, keeping all
-    //the original types so it's more clear what is going on
-    std::pair<edge_iterator, edge_iterator> ei = edges(g);
-    for(edge_iterator edge_iter = ei.first; edge_iter != ei.second; ++edge_iter) {
-        std::cout << "(" << source(*edge_iter, g) << ", " << target(*edge_iter, g) << ")\n";
     }
 
-    std::cout << "\n";
-    //Want to add another edge between (A,E)?
-    add_edge(A, E, g);
+    std::cout <<"num vertices: "<<num_vertices(g) << "\n" 
+        <<"num edges: "<<num_edges(g) << "\n";
+    std::cout <<"Traversing graph with DFS!\n";
 
-    //Print out the edge list again to see that it has been added
-    for(edge_iterator edge_iter = ei.first; edge_iter != ei.second; ++edge_iter) {
-        std::cout << "(" << source(*edge_iter, g) << ", " << target(*edge_iter, g) << ")\n";
-    }
+    boost::default_dfs_visitor vis;
+    // MyVisitor vis;
+    boost::depth_first_search(g, boost::visitor(vis));
+    std::cout <<"done!\n";
 
-    //Finally lets add a new vertex - remember the verticies are just of type int
-    int F = add_vertex(g);
-    std::cout << F << "\n";
-
-    //Connect our new vertex with an edge to A...
-    add_edge(A, F, g);
-
-    //...and print out our edge set once more to see that it was added
-    for(edge_iterator edge_iter = ei.first; edge_iter != ei.second; ++edge_iter) {
-        std::cout << "(" << source(*edge_iter, g) << ", " << target(*edge_iter, g) << ")\n";
-    }
     return 0;
 }

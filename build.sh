@@ -6,7 +6,7 @@ cp matrix_mult ../tests
 echo "*****MATRIX MULT O3*****"
 make clean
 make fast
-cp matrix_mult.fast ../tests
+mv matrix_mult.fast ../tests
 cd ..
 
 echo "*****MATRIX MULT EIGEN*****"
@@ -14,4 +14,12 @@ rm tests/mm_eigen
 cd mm_eigen
 make clean && make
 mv mm_eigen ../tests
+cd ..
+
+
+echo "*****DFS GRAPH*****"
+# rm tests/graphs_dfs
+cd graph_dfs
+make clean && make fast
+mv graph_dfs.fast ../tests
 cd ..
