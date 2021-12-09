@@ -20,6 +20,6 @@ cd ..
 echo "*****DFS GRAPH*****"
 # rm tests/graphs_dfs
 cd graph_dfs
-make clean && make fast
+make fast
 mv graph_dfs.fast ../tests
 cd ..
