@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -static
+CXXFLAGS = -static -ggdb -g
 BOOST_DIR="/home/jimmyjz2/passat/custom_testbin/boost_1_77_0/boost"
 BOOST_LIB="/home/jimmyjz2/passat/custom_testbin/boost_1_77_0/stage/lib"
 DATA_DIR = "/home/jimmyjz2/passat/custom_testbin/data"

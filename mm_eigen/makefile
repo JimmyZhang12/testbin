@@ -11,4 +11,4 @@ mm_eigen.o: main.cpp
 	$(CXX) $(CXXFLAGS) $(INC) -c main.cpp -o mm_eigen.o
 
 clean:
-	rm mm_eigen.o
+	rm -f mm_eigen.o
