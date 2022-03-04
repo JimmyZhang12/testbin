@@ -6,6 +6,14 @@ mv spmm ../tests
 cd ..
 
 
+echo "*****SPMM-REGULAR*****"
+rm -f tests/spmm_regular
+cd spmm_regular
+make clean && make
+mv spmm_regular ../tests
+cd ..
+
+
 echo "*****MATRIX MULT EIGEN*****"
 rm -f tests/mm_eigen
 cd mm_eigen
