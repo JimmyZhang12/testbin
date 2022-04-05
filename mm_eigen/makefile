@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -static -O3
+CXXFLAGS = -static -ggdb -g
 INC=-I/usr/include/eigen3
 
 all: main
